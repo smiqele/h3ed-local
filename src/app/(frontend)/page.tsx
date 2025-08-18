@@ -24,7 +24,7 @@ export default async function HomePage() {
             {course.description && (
               <p className="text-gray-600 text-sm mb-2">{course.description}</p>
             )}
-            <Link href={`/course/${course.id}`} className="text-blue-600 hover:underline text-sm">
+            <Link href={`/courses/${course.id}`} className="text-blue-600 hover:underline text-sm">
               Перейти к курсу →
             </Link>
           </li>

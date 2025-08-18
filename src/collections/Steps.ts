@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload';
 
 export const Steps: CollectionConfig = {
   slug: 'steps',
-  admin: { useAsTitle: 'title' },
+  admin: { useAsTitle: 'title',},
   access: {
     read: () => true,
   },
@@ -24,6 +24,12 @@ export const Steps: CollectionConfig = {
               description: 'Укажите ориентировочное время на прохождение шага в минутах',
             },
           },
+          {
+            name: 'order',
+            type: 'number',
+            required: true,
+            defaultValue: 0,
+          },
         ]
       },
       {
@@ -34,4 +40,5 @@ export const Steps: CollectionConfig = {
       }
     ], 
   }],
+  orderable: true,
 };

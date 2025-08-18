@@ -8,6 +8,7 @@ export const Topics: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
+    { name: 'slug', type: 'text', required: true, unique: true },
     { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
     { name: 'description', type: 'textarea' },
     { name: 'isSingleTopicCourse', label: 'Это единственная тема в курсе?', type: 'checkbox', defaultValue: false },

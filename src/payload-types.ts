@@ -217,6 +217,7 @@ export interface Course {
 export interface Topic {
   id: number;
   title: string;
+  slug: string;
   course: number | Course;
   description?: string | null;
   isSingleTopicCourse?: boolean | null;
@@ -234,12 +235,14 @@ export interface Topic {
  */
 export interface Step {
   id: number;
+  _order?: string | null;
   title: string;
   topic: number | Topic;
   /**
    * Укажите ориентировочное время на прохождение шага в минутах
    */
   duration?: number | null;
+  order: number;
   content?: {
     root: {
       type: string;
@@ -473,6 +476,7 @@ export interface CoursesSelect<T extends boolean = true> {
  */
 export interface TopicsSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   course?: T;
   description?: T;
   isSingleTopicCourse?: T;
@@ -485,9 +489,11 @@ export interface TopicsSelect<T extends boolean = true> {
  * via the `definition` "steps_select".
  */
 export interface StepsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   topic?: T;
   duration?: T;
+  order?: T;
   content?: T;
   updatedAt?: T;
   createdAt?: T;
