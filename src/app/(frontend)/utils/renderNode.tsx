@@ -1,23 +1,4 @@
-"use client"
-import { useState, useEffect, useRef } from "react"
-import { Copy, Check } from "lucide-react"
-
-export default function StepsViewer({ steps }: { steps: any[] }) {
-  const stepRefs = useRef<Array<HTMLDivElement | null>>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
-
-  // Инициализация currentIndex только на клиенте после монтирования
-  useEffect(() => {
-    const saved = localStorage.getItem('steps-currentIndex')
-    if (saved) setCurrentIndex(parseInt(saved))
-  }, [])
-
-  useEffect(() => {
-    stepRefs.current[currentIndex]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [currentIndex])
-
-  const renderNode = (node: any, key?: React.Key): React.ReactNode => {
+const renderNode = (node: any, key?: React.Key): React.ReactNode => {
     if (!node) return null
 
     switch (node.type) {
@@ -113,50 +94,3 @@ export default function StepsViewer({ steps }: { steps: any[] }) {
         return null
     }
   }
-
-  return (
-    <section className="w-full flex justify-center mb-20">
-      {/* Сайдбар */}
-      <div className="w-72 mr-8 sticky top-6 self-start h-fit border border-slate-200 rounded-2xl p-2 bg-white">
-        <ul>
-          {steps.map((step, idx) => (
-            <li
-              key={step.id}
-              className={`px-4 py-2 rounded-md ${idx <= currentIndex ? 'text-slate-900 cursor-pointer' : 'text-slate-400'} hover:bg-slate-100`}
-              onClick={() => { if (idx <= currentIndex) stepRefs.current[idx]?.scrollIntoView({ behavior: 'smooth' }) }}
-            >
-              {step.title}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="w-3xl">
-        {steps.slice(0, currentIndex + 1).map((step, idx) => (
-          <article ref={el => stepRefs.current[idx] = el} key={step.id || idx} className="border-1 border-slate-200 rounded-2xl p-8 bg-white my-6">
-            {step.duration && <div className="text-sm font-medium bg-[#C0EF4B] size-fit text-slate-900 rounded-full px-2 py-1 mb-2">{step.duration} минут(а)</div>}
-            <h2 className="text-3xl font-semibold mb-2"><span className="text-[#C0EF4B]">#</span>{step.title}</h2>
-            {step.content && <div>{renderNode(step.content.root ? step.content.root : typeof step.content === 'string' ? JSON.parse(step.content) : step.content)}</div>}
-          </article>
-        ))}
-
-        <div className="flex gap-2">
-          {currentIndex < steps.length - 1 && (
-            <button
-              onClick={() => {
-                const nextIndex = currentIndex + 1
-                setCurrentIndex(nextIndex)
-                localStorage.setItem('steps-currentIndex', nextIndex.toString())
-                stepRefs.current[nextIndex]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }}
-              className="w-full px-4 py-4 bg-slate-200 text-xl font-medium text-slate-900 rounded-xl cursor-pointer hover:bg-slate-100 border border-slate-200"
-            >
-              Далее
-            </button>
-          )}
-        </div>
-
-      </div>
-    </section>
-  )
-}

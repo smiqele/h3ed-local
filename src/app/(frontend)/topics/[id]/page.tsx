@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import React from 'react'
@@ -24,12 +23,15 @@ export default async function TopicPage({ params }: { params: { id: string } }) 
 
   const steps = stepsAll.docs
 
+  console.log('steps data:', steps)
+  console.log('steps data:', steps[9])
+
   if (!topic) return <div>Тема не найдена</div>
 
   return (
-    <main className="p-8 flex justify-center ">
-      <div className="w-3xl">
-        
+    <main className=" ">
+      <div className="">
+
         {/*<h1 className="text-3xl font-bold">{topic.title}</h1>*/}
         
         {topic.description && <p className="text-gray-600 mt-2">{topic.description}</p>}
