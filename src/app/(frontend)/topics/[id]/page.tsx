@@ -3,45 +3,42 @@ import config from '@payload-config'
 import React from 'react'
 import StepsViewer from './StepsViewer'
 
-// Добавляем async и правильный тип для params
-export default async function TopicPage({ params }: { params: Promise<{ id: string }> }) {
-  // Дожидаемся разрешения Promise params
-  const resolvedParams = await params
-  const { id } = resolvedParams
+export default async function TopicPage({ params }: { params: { id: string } }) {
+  const { id } = params
 
-  const payload = await getPayload({ config, importMap: {} })
+  const payload = await getPayload({ config })
 
-  const topic = await payload.findByID({
-    collection: 'topics',
-    id: id, // Используем id из resolved params
-    depth: 2,
-  })
-
-  const stepsIds = topic.relatedSteps?.docs?.map((step: any) => step.id) || []
-
-  const stepsAll = await payload.find({
-    collection: 'steps',
-    where: { id: { in: stepsIds } },
-    sort: '_order',
-    depth: 2,
-  })
-
-  const steps = stepsAll.docs
-
-  console.log('steps data:', steps)
-  console.log('steps data:', steps[9])
+  let topic: any = null
+  try {
+    topic = await payload.findByID({
+      collection: 'topics',
+      id,
+      depth: 2,
+    })
+  } catch (e) {
+    console.error('Ошибка загрузки темы:', e)
+    return <div>Тема не найдена</div>
+  }
 
   if (!topic) return <div>Тема не найдена</div>
 
+  const stepsIds = topic.relatedSteps?.docs?.map((step: any) => step.id) || []
+
+  let steps: any[] = []
+  if (stepsIds.length > 0) {
+    const stepsAll = await payload.find({
+      collection: 'steps',
+      where: { id: { in: stepsIds } },
+      sort: '_order',
+      depth: 2,
+    })
+    steps = stepsAll.docs
+  }
+
   return (
-    <main className=" ">
-      <div className="">
-        {/*<h1 className="text-3xl font-bold">{topic.title}</h1>*/}
-
-        {topic.description && <p className="text-gray-600 mt-2">{topic.description}</p>}
-
-        {steps.length > 0 && <StepsViewer steps={steps} />}
-      </div>
+    <main>
+      {topic.description && <p className="text-gray-600 mt-2">{topic.description}</p>}
+      {steps.length > 0 ? <StepsViewer steps={steps} /> : <p>Шаги не найдены</p>}
     </main>
   )
 }
