@@ -3,12 +3,12 @@ import config from '@payload-config'
 import React from 'react'
 import StepsViewer from './StepsViewer'
 
-export default async function TopicPage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default async function TopicPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params // ждём Promise
 
   const payload = await getPayload({ config })
 
-  let topic: any = null
+  let topic: any
   try {
     topic = await payload.findByID({
       collection: 'topics',
@@ -24,16 +24,17 @@ export default async function TopicPage({ params }: { params: { id: string } }) 
 
   const stepsIds = topic.relatedSteps?.docs?.map((step: any) => step.id) || []
 
-  let steps: any[] = []
-  if (stepsIds.length > 0) {
-    const stepsAll = await payload.find({
-      collection: 'steps',
-      where: { id: { in: stepsIds } },
-      sort: '_order',
-      depth: 2,
-    })
-    steps = stepsAll.docs
-  }
+  const steps =
+    stepsIds.length > 0
+      ? (
+          await payload.find({
+            collection: 'steps',
+            where: { id: { in: stepsIds } },
+            sort: '_order',
+            depth: 2,
+          })
+        ).docs
+      : []
 
   return (
     <main>
