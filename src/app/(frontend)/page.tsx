@@ -5,11 +5,6 @@ import config from '@payload-config'
 export default async function HomePage() {
   const payload = await getPayload({ config })
 
-  const { docs: courses } = await payload.find({
-    collection: 'courses',
-    depth: 1,
-  })
-
   const { docs: topics } = await payload.find({
     collection: 'topics',
     depth: 1,
