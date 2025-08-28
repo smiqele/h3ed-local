@@ -31,6 +31,15 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      views: {
+        'data-import': {
+          Component: 'src/components/views/ImportDataComponent',
+          path: '/data-import',
+        },
+      },
+      beforeNavLinks: ['src/components/beforeNavLinks/LinkToCustomView#LinkToCustomView'],
+    },
   },
   collections: [Users, Media, Courses, Topics, Steps, Tests, Categories, Tags, ExampleCollection],
   editor: lexicalEditor({
