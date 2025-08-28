@@ -1,5 +1,6 @@
-// storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -12,15 +13,14 @@ import { Code } from './blocks/Code'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 
-import { Categories } from './collections/Categories';
-import { Tags } from './collections/Tags';
+import { Categories } from './collections/Categories'
+import { Tags } from './collections/Tags'
 
-import { Courses } from './collections/Courses';
-import { Topics } from './collections/Topics';
-import { Steps } from './collections/Steps';
-import { Tests } from './collections/Tests';
+import { Courses } from './collections/Courses'
+import { Topics } from './collections/Topics'
+import { Steps } from './collections/Steps'
+import { Tests } from './collections/Tests'
 import { ExampleCollection } from './collections/ExampleCollection'
-
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -53,7 +53,15 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    // storage-adapter-placeholder
+    vercelBlobStorage({
+      enabled: true, // Optional, defaults to true
+      // Specify which collections should use Vercel Blob
+      collections: {
+        media: true,
+      },
+      // Token provided by Vercel once Blob storage is added to your Vercel project
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
   ],
-  cors: ['http://localhost:3001', 'http://10.250.0.143:3001']
+  cors: ['http://localhost:3001', 'http://10.250.0.143:3001'],
 })
