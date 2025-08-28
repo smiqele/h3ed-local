@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export default async function HomePage() {
   const payload = await getPayload({ config })
 
-  const { docs: topics } = await payload.find({
+  const { docs: topics = [] } = await payload.find({
     collection: 'topics',
     depth: 1,
   })
