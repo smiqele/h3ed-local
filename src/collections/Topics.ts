@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig } from 'payload'
 
 export const Topics: CollectionConfig = {
   slug: 'topics',
@@ -11,7 +11,12 @@ export const Topics: CollectionConfig = {
     { name: 'slug', type: 'text', required: true, unique: true },
     { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
     { name: 'description', type: 'textarea' },
-    { name: 'isSingleTopicCourse', label: 'Это единственная тема в курсе?', type: 'checkbox', defaultValue: false },
+    {
+      name: 'isSingleTopicCourse',
+      label: 'Это единственная тема в курсе?',
+      type: 'checkbox',
+      defaultValue: false,
+    },
     {
       name: 'relatedSteps',
       type: 'join',
@@ -19,4 +24,4 @@ export const Topics: CollectionConfig = {
       on: 'topic',
     },
   ],
-};
+}

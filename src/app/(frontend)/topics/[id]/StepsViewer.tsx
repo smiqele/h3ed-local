@@ -165,9 +165,9 @@ export default function StepsViewer({ steps }: { steps: any[] }) {
   }
 
   return (
-    <section className="w-full flex justify-center mb-20">
+    <section className="w-full flex mb-20">
       {/* Сайдбар */}
-      <div className="w-72 mr-8 sticky top-6 self-start h-fit border border-slate-200 rounded-2xl p-2 bg-white">
+      <div className="mr-8 sticky top-6 ml-6 self-start h-fit border border-slate-200 rounded-2xl p-2 bg-white">
         <ul>
           {steps.map((step, idx) => (
             <li
@@ -184,54 +184,59 @@ export default function StepsViewer({ steps }: { steps: any[] }) {
         </ul>
       </div>
 
-      <div className="w-3xl">
-        {steps.slice(0, currentIndex + 1).map((step, idx) => (
-          <article
-            ref={(el: HTMLElement | null) => {
-              if (el) {
-                stepRefs.current[idx] = el as HTMLDivElement
-              }
-            }}
-            key={step.id || idx}
-            className="border-1 border-slate-200 rounded-2xl p-8 bg-white my-6"
-          >
-            {step.duration && (
-              <div className="text-sm font-medium bg-[#C0EF4B] size-fit text-slate-900 rounded-full px-2 py-1 mb-2">
-                {step.duration} минут(а)
-              </div>
-            )}
-            <h2 className="text-3xl font-semibold mb-2">
-              <span className="text-[#C0EF4B]">#</span>
-              {step.title}
-            </h2>
-            {step.content && (
-              <div>
-                {renderNode(
-                  step.content.root
-                    ? step.content.root
-                    : typeof step.content === 'string'
-                      ? JSON.parse(step.content)
-                      : step.content,
-                )}
-              </div>
-            )}
-          </article>
-        ))}
-
-        <div className="flex gap-2">
-          {currentIndex < steps.length - 1 && (
-            <button
-              onClick={() => {
-                const nextIndex = currentIndex + 1
-                setCurrentIndex(nextIndex)
-                localStorage.setItem('steps-currentIndex', nextIndex.toString())
-                stepRefs.current[nextIndex]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      <div className="w-full flex justify-center">
+        <div className="">
+          {steps.slice(0, currentIndex + 1).map((step, idx) => (
+            <article
+              ref={(el: HTMLElement | null) => {
+                if (el) {
+                  stepRefs.current[idx] = el as HTMLDivElement
+                }
               }}
-              className="w-full px-4 py-4 bg-slate-200 text-xl font-medium text-slate-900 rounded-xl cursor-pointer hover:bg-slate-100 border border-slate-200"
+              key={step.id || idx}
+              className="border-1 border-slate-200 rounded-2xl p-8 bg-white my-6 w-3xl"
             >
-              Далее
-            </button>
-          )}
+              {step.duration && (
+                <div className="text-sm font-medium bg-[#C0EF4B] size-fit text-slate-900 rounded-full px-2 py-1 mb-2">
+                  {step.duration} минут(а)
+                </div>
+              )}
+              <h2 className="text-3xl font-semibold mb-2">
+                <span className="text-[#C0EF4B]">#</span>
+                {step.title}
+              </h2>
+              {step.content && (
+                <div>
+                  {renderNode(
+                    step.content.root
+                      ? step.content.root
+                      : typeof step.content === 'string'
+                        ? JSON.parse(step.content)
+                        : step.content,
+                  )}
+                </div>
+              )}
+            </article>
+          ))}
+
+          <div className="flex gap-2">
+            {currentIndex < steps.length - 1 && (
+              <button
+                onClick={() => {
+                  const nextIndex = currentIndex + 1
+                  setCurrentIndex(nextIndex)
+                  localStorage.setItem('steps-currentIndex', nextIndex.toString())
+                  stepRefs.current[nextIndex]?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  })
+                }}
+                className="w-full px-4 py-4 bg-slate-200 text-xl font-medium text-slate-900 rounded-xl cursor-pointer hover:bg-slate-100 border border-slate-200"
+              >
+                Далее
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,39 @@
+import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import React from 'react'
 import StepsViewer from './StepsViewer'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const payload = await getPayload({ config })
+
+  try {
+    const topic = await payload.findByID({
+      collection: 'topics',
+      id,
+      depth: 1,
+    })
+
+    return {
+      title: topic.title,
+      description: topic.description || 'Описание темы',
+      openGraph: {
+        title: topic.title,
+        description: topic.description || 'Описание темы',
+      },
+    }
+  } catch {
+    return {
+      title: 'Тема не найдена',
+      description: 'Такой темы не существует',
+    }
+  }
+}
 
 export default async function TopicPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params // ждём Promise
@@ -29,12 +61,19 @@ export default async function TopicPage({ params }: { params: Promise<{ id: stri
       ? (
           await payload.find({
             collection: 'steps',
-            where: { id: { in: stepsIds } },
-            sort: '_order',
+            where: {
+              topic: {
+                equals: id, // id топика
+              },
+            },
+            sort: '_order', // или _order
             depth: 2,
+            limit: 0, // ⚡ чтобы вытащить все
           })
         ).docs
       : []
+
+  console.log(steps)
 
   return (
     <main>
